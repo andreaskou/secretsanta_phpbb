@@ -1,0 +1,27 @@
+{
+    "name": "andreask/secretsanta",
+    "type": "phpbb-extension",
+    "description": "Generator for Secret Santa activity",
+    "homepage": "",
+    "version": "1.0.0-dev",
+    "time": "2021-11-19",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "Andreas Kourtidis",
+            "email": "akourtidis@gmail.com",
+            "homepage": "",
+            "role": "Main Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "composer/installers": "~1.0"
+    },
+    "extra": {
+        "display-name": "Secret Santa Generator",
+        "soft-require": {
+            "phpbb/phpbb": ">=3.2.0,<4.0.0@dev"
+        }
+    }
+}

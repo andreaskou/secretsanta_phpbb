@@ -1,0 +1,3 @@
+andreask_secretsanta_controller:
+    path: /demo/{name}
+    defaults: { _controller: andreask.secretsanta.controller.main:handle }

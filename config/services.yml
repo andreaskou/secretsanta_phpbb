@@ -1,0 +1,46 @@
+imports:
+    - { resource: parameters.yml }
+
+services:
+    andreask.secretsanta.controller.main:
+        class: andreask\secretsanta\controller\main_controller
+        arguments:
+            - '@config'
+            - '@controller.helper'
+            - '@template'
+            - '@language'
+
+    andreask.secretsanta.controller.acp:
+        class: andreask\secretsanta\controller\acp_controller
+        arguments:
+            - '@config'
+            - '@language'
+            - '@log'
+            - '@request'
+            - '@template'
+            - '@user'
+
+    andreask.secretsanta.service:
+        class: andreask\secretsanta\service
+        arguments:
+            - '@user'
+            - '%andreask.secretsanta.tables.secretsanta_table%'
+
+    andreask.secretsanta.listener:
+        class: andreask\secretsanta\event\main_listener
+        arguments:
+            - '@language'
+            - '@controller.helper'
+            - '@template'
+            - '%core.php_ext%'
+        tags:
+            - { name: event.listener }
+
+    andreask.secretsanta.notification.type.sample:
+        class: andreask\secretsanta\notification\type\sample
+        shared: false # service MUST not be shared for this to work!
+        parent: notification.type.base
+        calls:
+            - [set_controller_helper, ['@controller.helper']]
+        tags:
+            - { name: notification.type }

@@ -1,0 +1,2 @@
+parameters:
+    andreask.secretsanta.tables.secretsanta_table: '%core.table_prefix%andreask_secretsanta_table'
