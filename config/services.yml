@@ -6,6 +6,9 @@ services:
         class: andreask\secretsanta\controller\main_controller
         arguments:
             - '@config'
+            - '@dbal.conn'
+            - '@user'
+            - '@request'
             - '@controller.helper'
             - '@template'
             - '@language'

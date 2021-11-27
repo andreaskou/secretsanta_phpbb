@@ -36,17 +36,39 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 
-	'SECRETSANTA_HELLO'		=> 'Hello %s!',
-	'SECRETSANTA_GOODBYE'		=> 'Goodbye %s!',
+	'YOU_ARE_NOT_A_SECRET_SANTA_YET' 	=> 'Hey, you are not a secret santa yet.<br>But you could be, if you fill your info down bellow!',
 
-	'SECRETSANTA_EVENT'		=> ' :: Secretsanta Event :: ',
+	'SECRETSANTA_HELLO'					=> 'Hello %s!',
+	'SECRETSANTA_GOODBYE'				=> 'Goodbye %s!',
+
+	'SECRETSANTA_EVENT'					=> ' :: Secretsanta Event :: ',
 
 	'ACP_SECRETSANTA_GOODBYE'			=> 'Should say goodbye?',
-	'ACP_SECRETSANTA_SETTING_SAVED'	=> 'Settings have been saved successfully!',
+	'ACP_SECRETSANTA_SETTING_SAVED'		=> 'Settings have been saved successfully!',
 
-	'ANDREASK_SECRETSANTA_NOTIFICATION'	=> 'Secret Santa Generator notification',
+	'ANDREASK_SECRETSANTA_NOTIFICATION'	=>	'Secret Santa Generator notification',
 
-	'SECRETSANTA_PAGE'			=> 'Secretsanta Page',
-	'VIEWING_ANDREASK_SECRETSANTA'			=> 'Viewing Secret Santa Generator page',
+	'SECRETSANTA_PAGE'					=>	'Secretsanta Page',
+	'VIEWING_ANDREASK_SECRETSANTA'		=>	'Viewing Secret Santa Generator page',
+	'SECRETSANTA_INFORMATION'			=>	'Be a good Santa!',
+	'SECRETSANTA_ADDRESS'				=>	'This is your address Santa!',
+	'SECRETSANTA_ADDRESS_INFO'			=>	'Please add your information',
+	'SECRETSANTA_ADDRESS_INFO_EXPLAIN'	=>	'Fill your information the way you would write then on an envelope. Full name, address, postal code, country, telephone etc. i.e.<i></br>My Fullname</br>Thisismystreetaddress 9</br>Thisismylocation 1234AB</br>Thisismycountry</br>123456789</i>',
+	'SECRETSANTA_NOT_PAIRED_YET'		=>	'Sorry Santa!</br>But so far there are no kids on the list yes!</br>Pleae be patient and soon there will be someone lucky that you`ll make happy!</br>Don`t worry, we will notify you as soon there is someone paired to you!</br>Of course you are always welcome to check on your own!',
+	'SECRETSANTA_RECEPIENT'				=>	'Recepient`s Address',
+	'SECRETSANT_MANAGMENT'				=>	'Manage SecretSanta Participants',
+	'PARTICIPATING_USERS'				=>	'Amount of SecretSantas',
+	'PARTICIPANTS_PAIRED'				=>	[
+												0	=>	'There are no pais yet.',
+												1	=>	'Participants are paired',
+											],
+	'PAIR_PARTICIPANTS'					=>	'Pair Participants',
+	'PARTICIPANTS_PAIR'					=>	'Click on the button to pair the SecretSantas',
+	'SECRETSANTA_PARTICIPATION_CHECK'	=>	'By clickiing on this button you verify that you want to be a secret Santa.',
+	'SECRETSANTA_PARTICIPATION_VALIDATION'	=> 'Yes, I do!',
+	'SECRETSANTA_SENT_GIFT'				=>	'Don`t forget to click on this button once you`ve sent the gift!',
+	'SECRETSANTA_GIFT_VALIDATION'		=>	'Ho ho ho! I`ve sent the Gift!',
 
+	'SECRETSANTA_ADDRESS_EMPTY'			=>	'Address field can`t be empty!<br>Please fill up your info first.',
+	'SECRETSANTA_PAIR_CONFIRM'			=>	'Please verify that there is no errors in the pairs and click on "Yes" otherwise click on "Np" and try again.<br>%s',
 ]);
