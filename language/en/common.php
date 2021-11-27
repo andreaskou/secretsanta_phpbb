@@ -70,5 +70,7 @@ $lang = array_merge($lang, [
 	'SECRETSANTA_GIFT_VALIDATION'		=>	'Ho ho ho! I`ve sent the Gift!',
 
 	'SECRETSANTA_ADDRESS_EMPTY'			=>	'Address field can`t be empty!<br>Please fill up your info first.',
-	'SECRETSANTA_PAIR_CONFIRM'			=>	'Please verify that there is no errors in the pairs and click on "Yes" otherwise click on "Np" and try again.<br>%s',
+	'SECRETSANTA_PAIR_CONFIRM'			=>	'Please verify that there is no errors in the pairs and click on "Yes" otherwise click on "No" and try again.',
+	'THIS_SECRETSANTA'					=>	'This SecretSanta',
+	'SENDS_TO'							=>	'sends to',
 ]);

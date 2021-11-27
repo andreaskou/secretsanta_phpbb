@@ -181,12 +181,10 @@ class main_controller
 			echo "</pre>";
 			if ($pairs)
 			{
-				if (confirm_box(false, $this->language->lang('SECRETSANTA_PAIR_CONFIRM', $pairs),''))
-				{
-					var_dump($pairs);
-				}
+				$this->template->assign_var('SECRETSANTA_PAIR_REVIEW', true);
+				// $this->template->assign_var('SECRETSANTA_PAIR_CONFIRM', $this->language->lang('SECRETSANTA_PAIR_CONFIRM'));
+				$this->template->assign_var('SECRETSANTA_GENERATED_PAIRS', $pairs);
 			}
-
 		}
 
 
@@ -375,5 +373,20 @@ class main_controller
 		}
 		// return array
 		return $pairs;
+	}
+
+	private function format_pairs($pairs)
+	{
+		$text = [];
+		foreach ($pairs as $pair)
+		{
+			echo "<pre>";
+			var_dump($pair);
+			$text .= $this->language->lang('THIS_SECRETSANTA', $pair['user_id']) . $this->language->lang('SENDS_TO', $pair['secretsanta_sends_to']);
+			echo "</pre>";
+		}
+
+		var_dump($text);
+
 	}
 }
