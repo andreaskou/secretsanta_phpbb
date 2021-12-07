@@ -13,7 +13,7 @@ namespace andreask\secretsanta\notification\type;
 /**
  * Secret Santa Generator Notification class.
  */
-class sample extends \phpbb\notification\type\base
+class inform_organizer extends \phpbb\notification\type\base
 {
 	/** @var \phpbb\controller\helper */
 	protected $helper;
@@ -37,7 +37,7 @@ class sample extends \phpbb\notification\type\base
 	 */
 	public function get_type()
 	{
-		return 'andreask.secretsanta.notification.type.sample';
+		return 'andreask.secretsanta.notification.type.inform_organizer';
 	}
 
 	/**

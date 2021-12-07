@@ -49,11 +49,11 @@ class install_sample_data extends \phpbb\db\migration\migration
 	{
 		return [
 			// Add new config table settings
-			['config.add', ['andreask_secretsanta_sample_int', 0]],
-			['config.add', ['andreask_secretsanta_sample_str', '']],
+			['config.add', ['andreask_secretsanta_is_active', 0]],
+			['config.add', ['andreask_secretsanta_active_year', '']],
 
 			// Add a new config_text table setting
-			['config_text.add', ['andreask_secretsanta_sample', '']],
+			// ['config_text.add', ['andreask_secretsanta_sample', '']],
 
 			// Add new permissions
 			['permission.add', ['a_new_andreask_secretsanta']], // New admin permission
@@ -76,7 +76,7 @@ class install_sample_data extends \phpbb\db\migration\migration
 			['permission.role_add', ['secretsanta user role', 'u_', 'a new role for users']], // New role "secretsanta user role"
 
 			// Call a custom callable function to perform more complex operations.
-			['custom', [[$this, 'sample_callable_install']]],
+			// ['custom', [[$this, 'sample_callable_install']]],
 		];
 	}
 
@@ -108,28 +108,28 @@ class install_sample_data extends \phpbb\db\migration\migration
 	 *
 	 * @return array Array of data update instructions
 	 */
-	public function revert_data()
-	{
-		return [
-			['custom', [[$this, 'sample_callable_uninstall']]],
-		];
-	}
+	// public function revert_data()
+	// {
+	// 	return [
+	// 		['custom', [[$this, 'sample_callable_uninstall']]],
+	// 	];
+	// }
 
 	/**
 	 * A custom function for making more complex database changes
 	 * during extension installation. Must be declared as public.
 	 */
-	public function sample_callable_install()
-	{
-		// Run some SQL queries on the database
-	}
+	// public function sample_callable_install()
+	// {
+	// 	// Run some SQL queries on the database
+	// }
 
 	/**
 	 * A custom function for making more complex database changes
 	 * during extension un-installation. Must be declared as public.
 	 */
-	public function sample_callable_uninstall()
-	{
-		// Run some SQL queries on the database
-	}
+	// public function sample_callable_uninstall()
+	// {
+	// 	// Run some SQL queries on the database
+	// }
 }

@@ -38,5 +38,15 @@ $lang = array_merge($lang, [
 	'ACP_SECRETSANTA_TITLE'	=> 'Secret Santa Generator Module',
 	'ACP_SECRETSANTA'			=> 'Secret Santa Generator Settings',
 
-	'LOG_ACP_SECRETSANTA_SETTINGS'		=> '<strong>Secret Santa Generator settings updated</strong>',
+	'LOG_ACP_SECRETSANTA_SETTINGS'		=>	'<strong>Secret Santa Generator settings updated</strong>',
+	'ACP_SECRETSANTA_SET_ORGANIZER'		=>	'Set a user as an organizer for the secret santa.',
+	'SECRETSANTA_SET_ORGANIZER'			=>	'Set Organizer',
+	'SECRETSANTA_RESET_ORGANIZER'		=>	'Reset Organizer',
+	'SECRETSANTA_ORGANIZER_LEGEND'		=>	'Secret Santa Organizer',
+	'SECRETSANTA_ORGANIZER'				=>	[	
+												0	=>	'No organizer yet.',
+												1	=>	'Current organizer : <strong>%s</strong>',
+											],
+	'SECRETSANTA_ORGANIZER_WASRESET'	=>	'User <strong>%s</strong> is no more organizing Secretsanta.',
+	'SECRETSANTA_ORGANIZER_WASSET'		=>	'User <strong>%s</strong> was set to organize Secretsanta.',
 ]);

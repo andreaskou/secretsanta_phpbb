@@ -52,7 +52,7 @@ class main_controller
 	 * @param \phpbb\language\language	$language	Language object
 	 */
 
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\language\language $language)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\language\language $language, \phpbb\notification\manager $notification)
 	{
 		$this->config	= $config;
 		$this->db		= $db;
@@ -73,7 +73,7 @@ class main_controller
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response A Symfony Response object
 	 */
-	public function handle($name)
+	public function handle()
 	{
 
 		// First we check if he is a member of the forum.
@@ -84,8 +84,8 @@ class main_controller
 
 		$form_key = 'andreask_secretsanta';
 		add_form_key($form_key);
-		$l_message = !$this->config['andreask_secretsanta_goodbye'] ? 'SECRETSANTA_HELLO' : 'SECRETSANTA_GOODBYE';
-		$this->template->assign_var('SECRETSANTA_MESSAGE', $this->language->lang($l_message, $name));
+		// $l_message = !$this->config['andreask_secretsanta_goodbye'] ? 'SECRETSANTA_HELLO' : 'SECRETSANTA_GOODBYE';
+		$this->template->assign_var('SECRETSANTA_MESSAGE', $this->user->data['username']);
 		$secret_santas_info = $this->fetch_all();
 		$sends_to = $this->get_recepient_address($secret_santas_info['secretsanta_sends_to']);
 		$text = $secret_santas_info['secretsanta_address'];
@@ -94,15 +94,22 @@ class main_controller
 		if ($secret_santas_info['secretsanta_organizer'] == 1)
 		{
 			$secretsantas = $this->get_participants();
-			// var_dump($secretsantas['participants']);
 			$this->template->assign_var('SECRETSANTA_PARICIPATING_AMOUNT', $secretsantas['count']);
-			$test = 0; // Desable enable button and change text acordingly.
+			
+			$part_sends_to = array_column($secretsantas['participants'], 'secretsanta_address');
+			// $part_sends_to_count = count($participants);
+			
+			$sent_gifts = array_column($secretsantas['participants'], 'secretsanta_gift_sent');
+			$sent_gifts_count = count($sent_gifts);
+
+			$switch_for_pairing = ( $part_sends_to_count == $participants['count'] ) ? 0 : 1;
 
 			$this->template->assign_vars(
 				[
-					'ORGANIZER'						=>	$secret_santas_info['secretsanta_organizer'],
-					'PARTICIPANTS_PAIRED'			=>	$this->language->lang('PARTICIPANTS_PAIRED', $test),
-					'PARTICIPANTS_PAIRED_BOOL'		=>	$test,
+					'SECRETSANTA_PARICIPATING_AMOUNT' 	=>	$secretsantas['count'],
+					'ORGANIZER'							=>	$secret_santas_info['secretsanta_organizer'],
+					'PARTICIPANTS_PAIRED'				=>	$this->language->lang('PARTICIPANTS_PAIRED', (int) $sends_to),
+					'PARTICIPANTS_PAIRED_BOOL'			=>	( $participants['count'] <= 3 ),
 				]
 			);
 		}
@@ -130,9 +137,9 @@ class main_controller
 		if ($this->request->is_set_post('secretsanta_part_validation', ''))
 		{
 			// maybe use confirm_box()?
-			if (check_form_key($form_key))
+			if (!check_form_key($form_key))
 			{
-			trigger_error($this->language->lang('FUCK') . $this->usr_back_link(), E_USER_ERROR);
+			trigger_error($this->language->lang('FORM_INVALID') . $this->usr_back_link(), E_USER_ERROR);
 			}
 			$this->validate_action('secretsanta_participating');
 		}
@@ -141,23 +148,35 @@ class main_controller
 		if ($this->request->is_set_post('secretsanta_gift_validation', ''))
 		{
 			// maybe use confirm_box()?
-			if (check_form_key($form_key))
+			if (!check_form_key($form_key))
 			{
-			trigger_error($this->language->lang('FUCK') . $this->usr_back_link(), E_USER_ERROR);
+			trigger_error($this->language->lang('FORM_INVALID') . $this->usr_back_link(), E_USER_ERROR);
 			}
 			$this->validate_action('secretsanta_gift_sent');
 		}
-				
+
 		// Reseting participants or pairs depending on request only if user is organizer
 		if (($this->request->is_set('secretsanta_reset') || $this->request->is_set('secretsanta_reset_pair')) && $secret_santas_info['secretsanta_organizer'])
 		{
+
+			if (!check_form_key($form_key))
+			{
+			trigger_error($this->language->lang('FORM_INVALID') . $this->usr_back_link(), E_USER_WARNING);
+			}
+			
 			$requested = '';
 			$user_ids = array_column($secretsantas['participants'], 'user_id');
-			
 			if ($this->request->is_set('secretsanta_reset'))
 			{
 				// reset participants
-				$requested = 'secretsanta_reset';
+				if ($secretsantas['count'])
+				{
+					$requested = 'secretsanta_reset';
+				}
+				else
+				{
+					$errors[] = $this->language->lang('NO_PARTICIPANTS_TO_RESET');
+				}
 			}
 			
 			if ($this->request->is_set('secretsanta_reset_pair'))
@@ -165,25 +184,32 @@ class main_controller
 				// reset pairs
 				$requested = 'secretsanta_reset_pair';
 			}
-			
-			$this->reset_function($requested, $user_ids);
+			if(empty($errors))
+			{
+				$this->reset_function($requested, $user_ids);
+				trigger_error($this->language->lang('SECRETSANTA_USERS_RESET') . $this->usr_back_link(), E_USER_NOTICE);	
+			}
 		}
 
 		// Pairing the new participants only if user is organizer
 		if ($this->request->is_set_post('secretsanta_pair') && $secret_santas_info['secretsanta_organizer'])
 		{
+
 			// Pair Participants
-			echo "Pairing Participants</br>";
-			echo "<pre>";
-			// var_dump($secretsantas['participants']);
 			$pairs = $this->pair_secretsantas($secretsantas['participants']);
-			// var_dump($pairs);
-			echo "</pre>";
+			
 			if ($pairs)
 			{
-				$this->template->assign_var('SECRETSANTA_PAIR_REVIEW', true);
-				// $this->template->assign_var('SECRETSANTA_PAIR_CONFIRM', $this->language->lang('SECRETSANTA_PAIR_CONFIRM'));
-				$this->template->assign_var('SECRETSANTA_GENERATED_PAIRS', $pairs);
+				$go_nogo = confirm_box(false, $this->language->lang('SECRETSANTA_PAIR_CONFIRM'), $this->format_pairs($pairs));
+			}
+
+			if ($go_nogo)
+			{
+				echo "Confirmed!";
+			}
+			else
+			{
+				echo "Fuck!";
 			}
 		}
 
@@ -197,7 +223,7 @@ class main_controller
 				'IS_SECRET_SANTA'				=>	$secret_santas_info['secretsanta_address'],
 				'PARTICIPATING'					=>	$secret_santas_info['secretsanta_participating'],
 				'SECRETSANTA_SENDS_TO'			=>	$secretsanta_sends_to,
-				'SECRETSANTA_MESSAGE'			=>	$this->language->lang($l_message, $name),
+				// 'SECRETSANTA_MESSAGE'			=>	$this->language->lang($l_message, $name),
 				'SECRETSANTA_ADDRESS_PREVIEW'	=>	$secretsanta_address,
 				'SECRETSANTA_PARTICIPATING'		=>	$secret_santas_info['secretsanta_participating'],
 				'U_ACTION'						=>	$this->u_action,
@@ -285,8 +311,11 @@ class main_controller
 	 */
 	private function validate_action($action)
 	{
-		$sql = 'UPDATE ' . USERS_TABLE . " $action = 1 
+		$sql = 'UPDATE ' . USERS_TABLE . " SET $action = 1 
 				WHERE user_id = $this->user_id";
+		
+		$result = $this->db->sql_query($sql);
+		trigger_error($this->language->lang('SECRETSANTA_VALIDATED_PARTICIPATION') . $this->usr_back_link(), E_USER_NOTICE);
 	}
 
 	/**
@@ -308,6 +337,8 @@ class main_controller
 	 */
 	private function reset_function($action, $users)
 	{
+		echo "Reset";
+		die();
 		switch ($action)
 		{
 			case 'secretsanta_reset':
@@ -377,16 +408,12 @@ class main_controller
 
 	private function format_pairs($pairs)
 	{
-		$text = [];
+		$text = '<p>';
 		foreach ($pairs as $pair)
 		{
-			echo "<pre>";
-			var_dump($pair);
-			$text .= $this->language->lang('THIS_SECRETSANTA', $pair['user_id']) . $this->language->lang('SENDS_TO', $pair['secretsanta_sends_to']);
-			echo "</pre>";
+			$text .= "{$this->language->lang('THIS_SECRETSANTA', (int) $pair['user_id'])} {$this->language->lang('SENDS_TO', (int) $pair['secretsanta_sends_to'])}<br>";
 		}
-
-		var_dump($text);
-
+		$text .= '</p>';
+		return $text;
 	}
 }

@@ -12,35 +12,39 @@ services:
             - '@controller.helper'
             - '@template'
             - '@language'
+            - '@notification_manager'
 
     andreask.secretsanta.controller.acp:
         class: andreask\secretsanta\controller\acp_controller
         arguments:
             - '@config'
+            - '@dbal.conn'
             - '@language'
             - '@log'
             - '@request'
             - '@template'
             - '@user'
+            - '%core.root_path%'
+            - '%core.php_ext%'
 
     andreask.secretsanta.service:
         class: andreask\secretsanta\service
         arguments:
             - '@user'
-            - '%andreask.secretsanta.tables.secretsanta_table%'
 
     andreask.secretsanta.listener:
         class: andreask\secretsanta\event\main_listener
         arguments:
             - '@language'
+            - '@config'
             - '@controller.helper'
             - '@template'
             - '%core.php_ext%'
         tags:
             - { name: event.listener }
 
-    andreask.secretsanta.notification.type.sample:
-        class: andreask\secretsanta\notification\type\sample
+    andreask.secretsanta.notification.type.inform_organizer:
+        class: andreask\secretsanta\notification\type\inform_organizer
         shared: false # service MUST not be shared for this to work!
         parent: notification.type.base
         calls:

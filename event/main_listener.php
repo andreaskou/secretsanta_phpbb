@@ -26,13 +26,16 @@ class main_listener implements EventSubscriberInterface
 			'core.user_setup'							=> 'load_language_on_setup',
 			'core.page_header'							=> 'add_page_header_link',
 			'core.viewonline_overwrite_location'		=> 'viewonline_page',
-	'core.display_forums_modify_template_vars'	=> 'display_forums_modify_template_vars',
-			'core.permissions'	=> 'add_permissions',
+			'core.display_forums_modify_template_vars'	=> 'display_forums_modify_template_vars',
+			'core.permissions'							=> 'add_permissions',
 		];
 	}
 
 	/* @var \phpbb\language\language */
 	protected $language;
+
+	/* @var \phpbb\config\config */
+	protected $config;
 
 	/* @var \phpbb\controller\helper */
 	protected $helper;
@@ -51,9 +54,10 @@ class main_listener implements EventSubscriberInterface
 	 * @param \phpbb\template\template	$template	Template object
 	 * @param string                    $php_ext    phpEx
 	 */
-	public function __construct(\phpbb\language\language $language, \phpbb\controller\helper $helper, \phpbb\template\template $template, $php_ext)
+	public function __construct(\phpbb\language\language $language, \phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\template\template $template, $php_ext)
 	{
 		$this->language = $language;
+		$this->config	= $config;
 		$this->helper   = $helper;
 		$this->template = $template;
 		$this->php_ext  = $php_ext;
@@ -79,9 +83,10 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function add_page_header_link()
 	{
-		$this->template->assign_vars([
-			'U_SECRETSANTA_PAGE'	=> $this->helper->route('andreask_secretsanta_controller', ['name' => 'world']),
-		]);
+			$this->template->assign_vars([
+				'S_SECRETSANTA_IS_ACTIVE' => $this->config['andreask_secretsanta_is_active'],
+				'U_SECRETSANTA_PAGE'	=> $this->helper->route('andreask_secretsanta_controller'),
+			]);
 	}
 
 	/**
@@ -91,7 +96,7 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function viewonline_page($event)
 	{
-		if ($event['on_page'][1] === 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/demo') === 0)
+		if ($event['on_page'][1] === 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/secretsanta') === 0)
 		{
 			$event['location'] = $this->language->lang('VIEWING_ANDREASK_SECRETSANTA');
 			$event['location_url'] = $this->helper->route('andreask_secretsanta_controller', ['name' => 'world']);
@@ -106,9 +111,12 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function display_forums_modify_template_vars($event)
 	{
-		$forum_row = $event['forum_row'];
-		$forum_row['FORUM_NAME'] .= $this->language->lang('SECRETSANTA_EVENT');
-		$event['forum_row'] = $forum_row;
+		if ($this->config['andreask_secretsanta_is_active'])
+		{
+			$forum_row = $event['forum_row'];
+			$forum_row['FORUM_NAME'] .= $this->language->lang('SECRETSANTA_EVENT');
+			$event['forum_row'] = $forum_row;
+		}
 	}
 
 	/**

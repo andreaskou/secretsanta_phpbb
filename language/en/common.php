@@ -43,12 +43,12 @@ $lang = array_merge($lang, [
 
 	'SECRETSANTA_EVENT'					=> ' :: Secretsanta Event :: ',
 
-	'ACP_SECRETSANTA_GOODBYE'			=> 'Should say goodbye?',
+	'ACP_SECRETSANTA_SET_ONOFF'			=> 'Is it already time for Secret Santa?',
 	'ACP_SECRETSANTA_SETTING_SAVED'		=> 'Settings have been saved successfully!',
 
 	'ANDREASK_SECRETSANTA_NOTIFICATION'	=>	'Secret Santa Generator notification',
 
-	'SECRETSANTA_PAGE'					=>	'Secretsanta Page',
+	'SECRETSANTA_PAGE'					=>	'Secret Santa',
 	'VIEWING_ANDREASK_SECRETSANTA'		=>	'Viewing Secret Santa Generator page',
 	'SECRETSANTA_INFORMATION'			=>	'Be a good Santa!',
 	'SECRETSANTA_ADDRESS'				=>	'This is your address Santa!',
@@ -59,18 +59,21 @@ $lang = array_merge($lang, [
 	'SECRETSANT_MANAGMENT'				=>	'Manage SecretSanta Participants',
 	'PARTICIPATING_USERS'				=>	'Amount of SecretSantas',
 	'PARTICIPANTS_PAIRED'				=>	[
-												0	=>	'There are no pais yet.',
-												1	=>	'Participants are paired',
+												'0'	=>	'There are no pairs yet.',
+												'1'	=>	'Participants are paired',
 											],
 	'PAIR_PARTICIPANTS'					=>	'Pair Participants',
 	'PARTICIPANTS_PAIR'					=>	'Click on the button to pair the SecretSantas',
 	'SECRETSANTA_PARTICIPATION_CHECK'	=>	'By clickiing on this button you verify that you want to be a secret Santa.',
 	'SECRETSANTA_PARTICIPATION_VALIDATION'	=> 'Yes, I do!',
+	'SECRETSANTA_VALIDATED_PARTICIPATION'	=>	'You have validated your participation,',
+	'SECRETSANTA_USERS_RESET'			=>	'Reset process was complete.',
+	'NO_PARTICIPANTS_TO_RESET'			=>	'There are no participants to reset.',
 	'SECRETSANTA_SENT_GIFT'				=>	'Don`t forget to click on this button once you`ve sent the gift!',
 	'SECRETSANTA_GIFT_VALIDATION'		=>	'Ho ho ho! I`ve sent the Gift!',
 
 	'SECRETSANTA_ADDRESS_EMPTY'			=>	'Address field can`t be empty!<br>Please fill up your info first.',
 	'SECRETSANTA_PAIR_CONFIRM'			=>	'Please verify that there is no errors in the pairs and click on "Yes" otherwise click on "No" and try again.',
-	'THIS_SECRETSANTA'					=>	'This SecretSanta',
-	'SENDS_TO'							=>	'sends to',
+	'THIS_SECRETSANTA'					=>	'SecretSanta %d',
+	'SENDS_TO'							=>	'sends to %d',
 ]);

@@ -1,5 +1,12 @@
+{% if S_SECRETSANTA_IS_ACTIVE && S_USER_LOGGED_IN %}
 <li data-last-responsive="true">
 	<a href="{{ U_SECRETSANTA_PAGE }}" title="{{ lang('SECRETSANTA_PAGE') }}" role="menuitem">
-		<i class="icon fa-question-circle fa-fw" aria-hidden="true"></i><span>{{ lang('SECRETSANTA_PAGE') }}</span>
+		<i class="icon fas fa-gift fa-fw" aria-hidden="true"></i> <span>{{ lang('SECRETSANTA_PAGE') }}</span>
 	</a>
 </li>
+{% endif %}
+
+<!-- fas fa-gifts
+icon fa-gifts fa-fw 
+class="fas fa-sleigh"
+-->

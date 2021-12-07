@@ -32,7 +32,7 @@ class ext extends \phpbb\extension\base
 		if ($old_state === false)
 		{
 			$this->container->get('notification_manager')
-				->enable_notifications('andreask.secretsanta.notification.type.sample');
+				->enable_notifications('andreask.secretsanta.notification.type.paired');
 
 			return 'notification';
 		}
@@ -54,7 +54,7 @@ class ext extends \phpbb\extension\base
 		if ($old_state === false)
 		{
 			$this->container->get('notification_manager')
-				->disable_notifications('andreask.secretsanta.notification.type.sample');
+				->disable_notifications('andreask.secretsanta.notification.type.paired');
 
 			return 'notification';
 		}
