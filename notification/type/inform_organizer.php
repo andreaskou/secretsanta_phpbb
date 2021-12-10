@@ -30,6 +30,64 @@ class inform_organizer extends \phpbb\notification\type\base
 		$this->helper = $helper;
 	}
 
+	public function enable_step($old_state)
+    {
+        if ($old_state === false)
+        {
+            /** @var \phpbb\notification\manager $notification_manager */
+            $notification_manager = $this->container->get('notification_manager');
+
+            $notification_manager->enable_notifications('andreask.secretsanta.notification.type.inform_organizer');
+            return 'notification';
+        }
+
+        return parent::enable_step($old_state);
+    }
+
+    /**
+     * Disable notifications for the extension.
+     *
+     * @param mixed  $old_state  State returned by previous call of this method
+     * @return mixed             Returns false after last step, otherwise temporary state
+     * @access public
+     */
+    public function disable_step($old_state)
+    {
+        if ($old_state === false)
+        {
+            /** @var \phpbb\notification\manager $notification_manager */
+            $notification_manager = $this->container->get('notification_manager');
+
+            $notification_manager->disable_notifications('andreask.secretsanta.notification.type.inform_organizer');
+
+            return 'notification';
+        }
+
+        return parent::disable_step($old_state);
+    }
+
+    /**
+     * Purge notifications for the extension.
+     *
+     * @param mixed  $old_state  State returned by previous call of this method
+     * @return mixed             Returns false after last step, otherwise temporary state
+     * @access public
+     */
+    public function purge_step($old_state)
+    {
+        if ($old_state === false)
+        {
+            /** @var \phpbb\notification\manager $notification_manager */
+            $notification_manager = $this->container->get('notification_manager');
+
+            $notification_manager->purge_notifications('andreask.secretsanta.notification.type.inform_organizer');
+
+            return 'notification';
+        }
+
+        return parent::purge_step($old_state);
+    }
+
 	/**
 	 * Get notification type name
 	 *
@@ -47,7 +105,8 @@ class inform_organizer extends \phpbb\notification\type\base
 	 * 					Array of data (including keys 'id', 'lang', and 'group')
 	 */
 	public static $notification_option = [
-		'lang'	=> 'NOTIFICATION_TYPE_SECRETSANTA',
+		'lang'		=> 'NOTIFICATION_TYPE_SECRETSANTA',
+		'group'		=> 'VENDOR_EXTENSION_NOTIFICATIONS',
 	];
 
 	/**
@@ -69,7 +128,7 @@ class inform_organizer extends \phpbb\notification\type\base
 	 */
 	public static function get_item_id($data)
 	{
-		return $data['notification_id'];
+		return $data['item_id'];
 	}
 
 	/**
@@ -97,8 +156,8 @@ class inform_organizer extends \phpbb\notification\type\base
 	 */
 	public function find_users_for_notification($data, $options = [])
 	{
-		// Return an array of users to be notified, storing the user_ids as the array keys
-		return [];
+		$user[$data['user_id']] = $this->notification_manager->get_default_methods();
+		return $user;
 	}
 
 	/**
@@ -128,7 +187,7 @@ class inform_organizer extends \phpbb\notification\type\base
 	 */
 	public function get_url()
 	{
-		return $this->helper->route('andreask_secretsanta_controller', $this->get_data('secretsanta_sample_name'));
+		return $this->helper->route('andreask_secretsanta_controller', ['subject' => $this->get_data('subject')]);
 	}
 
 	/**
@@ -160,8 +219,7 @@ class inform_organizer extends \phpbb\notification\type\base
 	 */
 	public function create_insert_array($data, $pre_create_data = [])
 	{
-		$this->set_data('secretsanta_sample_name', $data['secretsanta_sample_name']);
-
+		$this->set_data('subject', $data['subject']);
 		parent::create_insert_array($data, $pre_create_data);
 	}
 }

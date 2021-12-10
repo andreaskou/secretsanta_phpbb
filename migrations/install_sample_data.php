@@ -51,6 +51,7 @@ class install_sample_data extends \phpbb\db\migration\migration
 			// Add new config table settings
 			['config.add', ['andreask_secretsanta_is_active', 0]],
 			['config.add', ['andreask_secretsanta_active_year', '']],
+			['config.add', ['andreask_secretsanta_notification_id', 0]],
 
 			// Add a new config_text table setting
 			// ['config_text.add', ['andreask_secretsanta_sample', '']],

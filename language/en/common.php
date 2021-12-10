@@ -36,10 +36,8 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, [
 
+	'SECRETSANTA_WELCOME'				=> 'Welcome %s',	
 	'YOU_ARE_NOT_A_SECRET_SANTA_YET' 	=> 'Hey, you are not a secret santa yet.<br>But you could be, if you fill your info down bellow!',
-
-	'SECRETSANTA_HELLO'					=> 'Hello %s!',
-	'SECRETSANTA_GOODBYE'				=> 'Goodbye %s!',
 
 	'SECRETSANTA_EVENT'					=> ' :: Secretsanta Event :: ',
 

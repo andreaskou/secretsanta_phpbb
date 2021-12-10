@@ -36,6 +36,9 @@ class main_controller
 	/** @var \phpbb\language\language */
 	protected $language;
 
+	/** @var \phpbb\notiification\manager */
+	protected $notification_manager;
+
 	protected $u_action;
 
 	private $user_id;
@@ -43,16 +46,17 @@ class main_controller
 	/**
 	 * Constructor
 	 *
-	 * @param \phpbb\config\config		$config		Config object
+	 * @param \phpbb\config\config				$config		Config object
 	 * @param \phpbb\db\driver\driver_interface	$db	database interface
-	 * @param \phpbb\user				$user		user interface
-	 * @param \phpbb\request 			$request	request interface
-	 * @param \phpbb\controller\helper	$helper		Controller helper object
-	 * @param \phpbb\template\template	$template	Template object
-	 * @param \phpbb\language\language	$language	Language object
+	 * @param \phpbb\user						$user		user interface
+	 * @param \phpbb\request 					$request	request interface
+	 * @param \phpbb\controller\helper			$helper		Controller helper object
+	 * @param \phpbb\template\template			$template	Template object
+	 * @param \phpbb\language\language			$language	Language object
+	 * @param \phpbb\notification\manager 		$notification_manager		Notification Manager
 	 */
 
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\language\language $language, \phpbb\notification\manager $notification)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\language\language $language, \phpbb\notification\manager $notification_manager)
 	{
 		$this->config	= $config;
 		$this->db		= $db;
@@ -61,9 +65,9 @@ class main_controller
 		$this->helper	= $helper;
 		$this->template	= $template;
 		$this->language	= $language;
+		$this->notification_manager = $notification_manager;
 		$this->user_id = $this->user->data['user_id'];
 		$this->u_action	= append_sid(generate_board_url() . '/' . $this->user->page['page']);
-		// NOTE: u_action does not have to be this way
 	}
 
 	/**
@@ -84,8 +88,8 @@ class main_controller
 
 		$form_key = 'andreask_secretsanta';
 		add_form_key($form_key);
-		// $l_message = !$this->config['andreask_secretsanta_goodbye'] ? 'SECRETSANTA_HELLO' : 'SECRETSANTA_GOODBYE';
-		$this->template->assign_var('SECRETSANTA_MESSAGE', $this->user->data['username']);
+
+		$this->template->assign_var('SECRETSANTA_WELCOME_MESSAGE', $this->language->lang('SECRETSANTA_WELCOME',$this->user->data['username']));
 		$secret_santas_info = $this->fetch_all();
 		$sends_to = $this->get_recepient_address($secret_santas_info['secretsanta_sends_to']);
 		$text = $secret_santas_info['secretsanta_address'];
@@ -93,23 +97,34 @@ class main_controller
 		// check if the user is the organizer to give some more info
 		if ($secret_santas_info['secretsanta_organizer'] == 1)
 		{
+			// Get all the participants
 			$secretsantas = $this->get_participants();
 			$this->template->assign_var('SECRETSANTA_PARICIPATING_AMOUNT', $secretsantas['count']);
 			
+			// Count the ones that filled their addresses
 			$part_sends_to = array_column($secretsantas['participants'], 'secretsanta_address');
-			// $part_sends_to_count = count($participants);
+			$part_sends_to_count = count(array_filter(
+				$part_sends_to, function($x)
+					{
+						return (!is_null($x));
+					}
+			));
 			
+			// How many have sent the gifts?
 			$sent_gifts = array_column($secretsantas['participants'], 'secretsanta_gift_sent');
 			$sent_gifts_count = count($sent_gifts);
 
-			$switch_for_pairing = ( $part_sends_to_count == $participants['count'] ) ? 0 : 1;
+			var_dump(!is_null($sends_to));
+			// var_dump((($part_sends_to_count == $secretsantas['count']) && (is_null($sends_to))));
+
 
 			$this->template->assign_vars(
 				[
 					'SECRETSANTA_PARICIPATING_AMOUNT' 	=>	$secretsantas['count'],
 					'ORGANIZER'							=>	$secret_santas_info['secretsanta_organizer'],
 					'PARTICIPANTS_PAIRED'				=>	$this->language->lang('PARTICIPANTS_PAIRED', (int) $sends_to),
-					'PARTICIPANTS_PAIRED_BOOL'			=>	( $participants['count'] <= 3 ),
+					'PARTICIPANTS_PAIRED_BOOL'			=>	(!is_null($sends_to)),
+					// 'PARTICIPANTS_PAIRED_BOOL'			=>	($part_sends_to_count == $secretsantas['count'])
 				]
 			);
 		}
@@ -136,10 +151,13 @@ class main_controller
 		// User is validating his participation
 		if ($this->request->is_set_post('secretsanta_part_validation', ''))
 		{
-			// maybe use confirm_box()?
 			if (!check_form_key($form_key))
 			{
-			trigger_error($this->language->lang('FORM_INVALID') . $this->usr_back_link(), E_USER_ERROR);
+				trigger_error($this->language->lang('FORM_INVALID') . $this->usr_back_link(), E_USER_ERROR);
+			}
+			if (empty($secret_santas_info))
+			{
+				trigger_error($this->language->lang('NO_VALID_ADDRESS') . $this->usr_back_link(), E_USER_ERROR);
 			}
 			$this->validate_action('secretsanta_participating');
 		}
@@ -200,16 +218,17 @@ class main_controller
 			
 			if ($pairs)
 			{
-				$go_nogo = confirm_box(false, $this->language->lang('SECRETSANTA_PAIR_CONFIRM'), $this->format_pairs($pairs));
-			}
-
-			if ($go_nogo)
-			{
-				echo "Confirmed!";
-			}
-			else
-			{
-				echo "Fuck!";
+				if (confirm_box(false, $this->language->lang('SECRETSANTA_PAIR_CONFIRM'), $this->format_pairs($pairs)))
+				foreach($pairs as $pair)
+				{
+					$update_array = ['secretsanta_sends_to' => (int) $pair['secretsanta_sends_to']];
+					$sql = 'UPDATE '. USERS_TABLE .' SET ' . $this->db->sql_build_array('UPDATE', $update_array) .' WHERE user_id = '. (int) $pair['user_id'];
+					$result = $this->db->sql_query($sql);
+				}
+				else
+				{
+					echo "Fuck!";
+				}
 			}
 		}
 
@@ -223,14 +242,13 @@ class main_controller
 				'IS_SECRET_SANTA'				=>	$secret_santas_info['secretsanta_address'],
 				'PARTICIPATING'					=>	$secret_santas_info['secretsanta_participating'],
 				'SECRETSANTA_SENDS_TO'			=>	$secretsanta_sends_to,
-				// 'SECRETSANTA_MESSAGE'			=>	$this->language->lang($l_message, $name),
 				'SECRETSANTA_ADDRESS_PREVIEW'	=>	$secretsanta_address,
 				'SECRETSANTA_PARTICIPATING'		=>	$secret_santas_info['secretsanta_participating'],
 				'U_ACTION'						=>	$this->u_action,
 			]
 		);
 
-		return $this->helper->render('@andreask_secretsanta/secretsanta_body.html', $name);
+		return $this->helper->render('@andreask_secretsanta/secretsanta_body.html');
 	}
 
 	/**
@@ -284,6 +302,7 @@ class main_controller
 		$result = $this->db->sql_query($sql);
 		$recepient_address = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
+
 		return $recepient_address;
 	}
 
@@ -337,8 +356,6 @@ class main_controller
 	 */
 	private function reset_function($action, $users)
 	{
-		echo "Reset";
-		die();
 		switch ($action)
 		{
 			case 'secretsanta_reset':
@@ -346,7 +363,6 @@ class main_controller
 
 				$sql = 'UPDATE '. USERS_TABLE . ' SET '. $this->db->sql_build_array('UPDATE', $sql_array) .' 
 						WHERE '. $this->db->sql_in_set('user_id', $users);
-				
 						$result = $this->db->sql_query($sql);
 				break;
 						
@@ -415,5 +431,21 @@ class main_controller
 		}
 		$text .= '</p>';
 		return $text;
+	}
+
+	private function notify($type)
+	{
+		$this->config->increment('andreask_secretsanta_notification_id', 1);
+		$notification_array = [
+			'item_id'			=>	$this->config['andreask_secretsanta_notification_id'],
+			'user_id'			=>	$this->user->data['user_id'],
+			'sender_id'			=>	122,
+			// 'sender_id'			=>	$this->user->data['user_id'],
+			'message_id'		=>	12,
+			'message_subject'	=>	'Ok this is a sample subject',
+			'subject'	=> 'Secret Santa Sample Name',
+		];
+		// $this->notification_manager->add_notifications('andreask.secretsanta.notification.type.inform_organizer', $notification_array);
+
 	}
 }
