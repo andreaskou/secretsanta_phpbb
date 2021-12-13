@@ -8,7 +8,7 @@
  *
  */
 
-namespace andreask\secretsanta\controller;
+namespace andreask\secretx\controller;
 
 /**
  * Secret Santa Generator ACP controller.
@@ -42,7 +42,7 @@ class acp_controller
 	protected $phpbb_root_path;
 	protected $phpEx;
 
-	protected $secretsanta_organizer;
+	protected $secretx_organizer;
 
 
 	/**
@@ -67,7 +67,7 @@ class acp_controller
 		$this->user		= $user;
 		$this->phpEx	= $phpEx;
 		$this->phpbb_root_path	= $phpbb_root_path;
-		$this->secretsanta_organizer = $this->get_secretssanta_organizer();
+		$this->secretx_organizer = $this->get_secretx_organizer();
 	}
 
 	/**
@@ -78,10 +78,10 @@ class acp_controller
 	public function display_options()
 	{
 		// Add our common language file
-		$this->language->add_lang('common', 'andreask/secretsanta');
+		$this->language->add_lang('common', 'andreask/secretx');
 
 		// Create a form key for preventing CSRF attacks
-		add_form_key('andreask_secretsanta_acp');
+		add_form_key('andreask_secretx_acp');
 
 		// Create an array to collect errors that will be output to the user
 		$errors = [];
@@ -90,7 +90,7 @@ class acp_controller
 		if ($this->request->is_set_post('submit'))
 		{
 			// Test if the submitted form is valid
-			if (!check_form_key('andreask_secretsanta_acp'))
+			if (!check_form_key('andreask_secretx_acp'))
 			{
 				$errors[] = $this->language->lang('FORM_INVALID');
 			}
@@ -98,48 +98,48 @@ class acp_controller
 			if (empty($errors))
 			{
 				// Set the options the user configured
-				$this->config->set('andreask_secretsanta_is_active', $this->request->variable('andreask_secretsanta_is_active', 0));
+				$this->config->set('andreask_secretx_is_active', $this->request->variable('andreask_secretx_is_active', 0));
 
 				// Add option settings change action to the admin log
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_SECRETSANTA_SETTINGS');
+				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_ACP_SECRETX_SETTINGS');
 
 				// Option settings have been updated and logged
 				// Confirm this to the user and provide link back to previous page
-				trigger_error($this->language->lang('ACP_SECRETSANTA_SETTING_SAVED') . adm_back_link($this->u_action));
+				trigger_error($this->language->lang('ACP_SECRETX_SETTING_SAVED') . adm_back_link($this->u_action));
 			}
 		}
 
-		if($this->secretsanta_organizer)
+		if($this->secretx_organizer)
 		{
-			if(count($this->secretsanta_organizer) > 1)
+			if(count($this->secretx_organizer) > 1)
 			{
-				$errors[] = $this->language->lang('PLEASE_RESET_SECRETSANTA_ORGANIZERS');
+				$errors[] = $this->language->lang('PLEASE_RESET_SECRETX_ORGANIZERS');
 			}
 			else
 			{
-				$secretsanta_organizer = array_shift($this->secretsanta_organizer);
-				$this->secretsanta_organizer = $secretsanta_organizer['username'];
+				$secretx_organizer = array_shift($this->secretx_organizer);
+				$this->secretx_organizer = $secretx_organizer['username'];
 			}
 		}
-		elseif(!$this->secretsanta_organizer)
+		elseif(!$this->secretx_organizer)
 		{
-			$this->secretsanta_organizer = 0;
+			$this->secretx_organizer = 0;
 		}
 
-		if ($this->request->is_set_post('secretsanta_username_submit')) 
+		if ($this->request->is_set_post('secretx_username_submit')) 
 		{
-			if (!check_form_key('andreask_secretsanta_acp'))
+			if (!check_form_key('andreask_secretx_acp'))
 			{
 				$errors[] = $this->language->lang('FORM_INVALID');
 			}
 			
 			// clean emty lines if exist...
-			$user  = trim($this->request->variable('secretsanta_username', ''));
+			$user  = trim($this->request->variable('secretx_username', ''));
 
 			if ($user == '')
 			{
-				$errors[] = $this->language->lang('SECRETSANTA_CANNOT_BE_EMPTY');
-			}elseif ($this->secretsanta_organizer)
+				$errors[] = $this->language->lang('SECRETX_CANNOT_BE_EMPTY');
+			}elseif ($this->secretx_organizer)
 			{
 				$errors[] = $this->language->lang('CANNOT_HAVE_MORE_THAN_ONE_SERCRESANTA_ORGANIZERS');
 			}
@@ -159,27 +159,27 @@ class acp_controller
 			}
 			if (!$errors)
 			{
-				$sql = 'UPDATE '. USERS_TABLE .' SET secretsanta_organizer = 1 
+				$sql = 'UPDATE '. USERS_TABLE .' SET secretx_organizer = 1 
 						WHERE '. $this->db->sql_in_set('user_id', $organizer);
 				$this->db->sql_query($sql);
-				trigger_error($this->language->lang('SECRETSANTA_ORGANIZER_WASSET', $user) . adm_back_link($this->u_action), E_USER_NOTICE);
+				trigger_error($this->language->lang('SECRETX_ORGANIZER_WASSET', $user) . adm_back_link($this->u_action), E_USER_NOTICE);
 			}
 		}
 
-		if($this->request->is_set_post('secretsanta_username_reset'))
+		if($this->request->is_set_post('secretx_username_reset'))
 		{
-			if(!$this->secretsanta_organizer)
+			if(!$this->secretx_organizer)
 			{
 				$errors[] = $this->language->lang('NOTHING_TODO');
 			}
 			
 			if (!$errors)
 			{
-				$sql = 'UPDATE '. USERS_TABLE .' SET secretsanta_organizer = null
-				WHERE secretsanta_organizer = 1';
+				$sql = 'UPDATE '. USERS_TABLE .' SET secretx_organizer = null
+				WHERE secretx_organizer = 1';
 				// var_dump($sql);
 				$query = $this->db->sql_query($sql);
-				trigger_error($this->language->lang('SECRETSANTA_ORGANIZER_WASRESET', $this->secretsanta_organizer) . adm_back_link($this->u_action), E_USER_NOTICE);
+				trigger_error($this->language->lang('SECRETX_ORGANIZER_WASRESET', $this->secretx_organizer) . adm_back_link($this->u_action), E_USER_NOTICE);
 			}
 		}
 		
@@ -192,9 +192,9 @@ class acp_controller
 
 			'U_ACTION'		=> $this->u_action,
 
-			'ANDREASK_SECRETSANTA_IS_ACTIVE'	=> (bool) $this->config['andreask_secretsanta_is_active'],
-			'U_FIND_USERNAME'       =>	append_sid("{$this->phpbb_root_path}memberlist.$this->phpEx", 'mode=searchuser&amp;form=andreask_secretsanta_acp&amp;select_single=true&amp;field=secretsanta_username'),
-			'SECRETSANTA_ORGANIZER'	=>	$this->language->lang('SECRETSANTA_ORGANIZER', $this->secretsanta_organizer),
+			'ANDREASK_SECRETX_IS_ACTIVE'	=> (bool) $this->config['andreask_secretx_is_active'],
+			'U_FIND_USERNAME'       =>	append_sid("{$this->phpbb_root_path}memberlist.$this->phpEx", 'mode=searchuser&amp;form=andreask_secretx_acp&amp;select_single=true&amp;field=secretx_username'),
+			'SECRETX_ORGANIZER'	=>	$this->language->lang('SECRETX_ORGANIZER', $this->secretx_organizer),
 		]);
 	}
 
@@ -209,10 +209,10 @@ class acp_controller
 		$this->u_action = $u_action;
 	}
 
-	private function get_secretssanta_organizer()
+	private function get_secretx_organizer()
 	{
 		$sql = 'SELECT username FROM '. USERS_TABLE .' 
-				WHERE secretsanta_organizer = 1';
+				WHERE secretx_organizer = 1';
 		$query = $this->db->sql_query($sql);
 		$result = $this->db->sql_fetchrowset($query);
 		// var_dump($result);

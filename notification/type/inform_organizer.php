@@ -8,7 +8,7 @@
  *
  */
 
-namespace andreask\secretsanta\notification\type;
+namespace andreask\secretx\notification\type;
 
 /**
  * Secret Santa Generator Notification class.
@@ -37,7 +37,7 @@ class inform_organizer extends \phpbb\notification\type\base
             /** @var \phpbb\notification\manager $notification_manager */
             $notification_manager = $this->container->get('notification_manager');
 
-            $notification_manager->enable_notifications('andreask.secretsanta.notification.type.inform_organizer');
+            $notification_manager->enable_notifications('andreask.secretx.notification.type.inform_organizer');
             return 'notification';
         }
 
@@ -58,7 +58,7 @@ class inform_organizer extends \phpbb\notification\type\base
             /** @var \phpbb\notification\manager $notification_manager */
             $notification_manager = $this->container->get('notification_manager');
 
-            $notification_manager->disable_notifications('andreask.secretsanta.notification.type.inform_organizer');
+            $notification_manager->disable_notifications('andreask.secretx.notification.type.inform_organizer');
 
             return 'notification';
         }
@@ -80,7 +80,7 @@ class inform_organizer extends \phpbb\notification\type\base
             /** @var \phpbb\notification\manager $notification_manager */
             $notification_manager = $this->container->get('notification_manager');
 
-            $notification_manager->purge_notifications('andreask.secretsanta.notification.type.inform_organizer');
+            $notification_manager->purge_notifications('andreask.secretx.notification.type.inform_organizer');
 
             return 'notification';
         }
@@ -95,7 +95,7 @@ class inform_organizer extends \phpbb\notification\type\base
 	 */
 	public function get_type()
 	{
-		return 'andreask.secretsanta.notification.type.inform_organizer';
+		return 'andreask.secretx.notification.type.inform_organizer';
 	}
 
 	/**
@@ -105,7 +105,7 @@ class inform_organizer extends \phpbb\notification\type\base
 	 * 					Array of data (including keys 'id', 'lang', and 'group')
 	 */
 	public static $notification_option = [
-		'lang'		=> 'NOTIFICATION_TYPE_SECRETSANTA',
+		'lang'		=> 'NOTIFICATION_TYPE_SECRETX',
 		'group'		=> 'VENDOR_EXTENSION_NOTIFICATIONS',
 	];
 
@@ -167,7 +167,7 @@ class inform_organizer extends \phpbb\notification\type\base
 	 */
 	public function users_to_query()
 	{
-		return [];
+		return [$this->get_data('sender_id')];
 	}
 
 	/**
@@ -177,7 +177,8 @@ class inform_organizer extends \phpbb\notification\type\base
 	 */
 	public function get_title()
 	{
-		return $this->language->lang('ANDREASK_SECRETSANTA_NOTIFICATION');
+		return $this->get_data('subject');
+		// return $this->language->lang('ANDREASK_SECRETX_NOTIFICATION');
 	}
 
 	/**
@@ -187,7 +188,7 @@ class inform_organizer extends \phpbb\notification\type\base
 	 */
 	public function get_url()
 	{
-		return $this->helper->route('andreask_secretsanta_controller', ['subject' => $this->get_data('subject')]);
+		return $this->helper->route('andreask_secretx_controller', ['subject' => $this->get_data('subject')]);
 	}
 
 	/**

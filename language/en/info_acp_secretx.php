@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Secret Santa Generator. An extension for the phpBB Forum Software package.
+ * Secret X Generator. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2021, Andreas Kourtidis
  * @license GNU General Public License, version 2 (GPL-2.0)
@@ -35,5 +35,18 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, [
-	'NOTIFICATION_TYPE_SECRETSANTA'	=> 'Use Secret Santa Generator notifications',
+	'ACP_SECRETX_TITLE'	=> 'Secret Santa Generator Module',
+	'ACP_SECRETX'			=> 'Secret Santa Generator Settings',
+
+	'LOG_ACP_SECRETX_SETTINGS'		=>	'<strong>Secret Santa Generator settings updated</strong>',
+	'ACP_SECRETX_SET_ORGANIZER'		=>	'Set a user as an organizer for the secret santa.',
+	'SECRETX_SET_ORGANIZER'			=>	'Set Organizer',
+	'SECRETX_RESET_ORGANIZER'		=>	'Reset Organizer',
+	'SECRETX_ORGANIZER_LEGEND'		=>	'Secret Santa Organizer',
+	'SECRETX_ORGANIZER'				=>	[	
+												0	=>	'No organizer yet.',
+												1	=>	'Current organizer : <strong>%s</strong>',
+											],
+	'SECRETX_ORGANIZER_WASRESET'	=>	'User <strong>%s</strong> is no more organizing Secretsanta.',
+	'SECRETX_ORGANIZER_WASSET'		=>	'User <strong>%s</strong> was set to organize Secretsanta.',
 ]);

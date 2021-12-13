@@ -2,8 +2,8 @@ imports:
     - { resource: parameters.yml }
 
 services:
-    andreask.secretsanta.controller.main:
-        class: andreask\secretsanta\controller\main_controller
+    andreask.secretx.controller.main:
+        class: andreask\secretx\controller\main_controller
         arguments:
             - '@config'
             - '@dbal.conn'
@@ -14,8 +14,8 @@ services:
             - '@language'
             - '@notification_manager'
 
-    andreask.secretsanta.controller.acp:
-        class: andreask\secretsanta\controller\acp_controller
+    andreask.secretx.controller.acp:
+        class: andreask\secretx\controller\acp_controller
         arguments:
             - '@config'
             - '@dbal.conn'
@@ -27,13 +27,13 @@ services:
             - '%core.root_path%'
             - '%core.php_ext%'
 
-    andreask.secretsanta.service:
-        class: andreask\secretsanta\service
+    andreask.secretx.service:
+        class: andreask\secretx\service
         arguments:
             - '@user'
 
-    andreask.secretsanta.listener:
-        class: andreask\secretsanta\event\main_listener
+    andreask.secretx.listener:
+        class: andreask\secretx\event\main_listener
         arguments:
             - '@language'
             - '@config'
@@ -43,8 +43,8 @@ services:
         tags:
             - { name: event.listener }
 
-    andreask.secretsanta.notification.type.inform_organizer:
-        class: andreask\secretsanta\notification\type\inform_organizer
+    andreask.secretx.notification.type.inform_organizer:
+        class: andreask\secretx\notification\type\inform_organizer
         shared: false # service MUST not be shared for this to work!
         parent: notification.type.base
         calls:

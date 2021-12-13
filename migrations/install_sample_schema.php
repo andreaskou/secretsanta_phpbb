@@ -8,13 +8,13 @@
  *
  */
 
-namespace andreask\secretsanta\migrations;
+namespace andreask\secretx\migrations;
 
 class install_sample_schema extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
-		return $this->db_tools->sql_column_exists($this->table_prefix . 'users', 'user_secretsanta');
+		return $this->db_tools->sql_column_exists($this->table_prefix . 'users', 'secretx_sends_to');
 	}
 
 	public static function depends_on()
@@ -44,28 +44,13 @@ class install_sample_schema extends \phpbb\db\migration\migration
 	public function update_schema()
 	{
 		return [
-			// 'add_tables'		=> [
-			// 	$this->table_prefix . 'andreask_secretsanta_table'	=> [
-			// 		'COLUMNS'		=> [
-			// 			'secretsanta_id'				=> ['UINT', null, 'auto_increment'],
-			// 			'secretsanta_user_id'			=> ['TINT:4', null],
-			// 			'secretsanta_sends_to'			=> ['TINT:4', null],
-			// 			'secretsanta_address'			=> ['TEXT_UNI', null],
-			// 			'secretsanta_gift_sent'			=> ['BOOL'],
-			//			'secretsanta_participating'		=> ['BOOL'],
-			//			'secretsanta_organizer'			=> ['BOOL'],
-
-			// 		],
-			// 		'PRIMARY_KEY'	=> 'secretsanta_id',
-			// 	],
-			// ],
 			'add_columns'	=> [
 				$this->table_prefix . 'users'			=> [
-					'secretsanta_sends_to'			=> ['TINT:4', null],
-					'secretsanta_address'			=> ['TEXT_UNI', null],
-					'secretsanta_gift_sent'			=> ['BOOL'],
-					'secretsanta_participating'		=> ['BOOL'],
-					'secretsanta_organizer'			=> ['BOOL'],
+					'secretx_sends_to'			=> ['TINT:4', null],
+					'secretx_address'			=> ['TEXT_UNI', null],
+					'secretx_gift_sent'			=> ['BOOL'],
+					'secretx_participating'		=> ['BOOL'],
+					'secretx_organizer'			=> ['BOOL'],
 				],
 			],
 		];
@@ -96,18 +81,13 @@ class install_sample_schema extends \phpbb\db\migration\migration
 		return [
 			'drop_columns'	=> [
 				$this->table_prefix . 'users'	=> [
-				'user_secretsanta',
-				'secretsanta_user_id',
-				'secretsanta_sends_to',
-				'secretsanta_address',
-				'secretsanta_gift_sent',
-				'secretsanta_participating',
-				'secretsanta_organizer',
+				'secretx_sends_to',
+				'secretx_address',
+				'secretx_gift_sent',
+				'secretx_participating',
+				'secretx_organizer',
 				],
 			],
-			// 'drop_tables'		=> [
-			// 	$this->table_prefix . 'andreask_secretsanta_table',
-			// ],
 		];
 	}
 }

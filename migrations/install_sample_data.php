@@ -8,13 +8,13 @@
  *
  */
 
-namespace andreask\secretsanta\migrations;
+namespace andreask\secretx\migrations;
 
 class install_sample_data extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
-		return $this->config->offsetExists('andreask_secretsanta_sample_int');
+		return $this->config->offsetExists('andreask_secretx_sample_int');
 	}
 
 	public static function depends_on()
@@ -49,32 +49,32 @@ class install_sample_data extends \phpbb\db\migration\migration
 	{
 		return [
 			// Add new config table settings
-			['config.add', ['andreask_secretsanta_is_active', 0]],
-			['config.add', ['andreask_secretsanta_active_year', '']],
-			['config.add', ['andreask_secretsanta_notification_id', 0]],
+			['config.add', ['andreask_secretx_is_active', 0]],
+			['config.add', ['andreask_secretx_active_year', '']],
+			['config.add', ['andreask_secretx_notification_id', 0]],
 
 			// Add a new config_text table setting
-			// ['config_text.add', ['andreask_secretsanta_sample', '']],
+			// ['config_text.add', ['andreask_secretx_sample', '']],
 
 			// Add new permissions
-			['permission.add', ['a_new_andreask_secretsanta']], // New admin permission
-			['permission.add', ['m_new_andreask_secretsanta']], // New moderator permission
-			['permission.add', ['u_new_andreask_secretsanta']], // New user permission
+			['permission.add', ['a_new_andreask_secretx']], // New admin permission
+			['permission.add', ['m_new_andreask_secretx']], // New moderator permission
+			['permission.add', ['u_new_andreask_secretx']], // New user permission
 
 			// ['permission.add', ['a_copy', true, 'a_existing']], // New admin permission a_copy, copies permission settings from a_existing
 
 			// Set our new permissions
-			['permission.permission_set', ['ROLE_ADMIN_FULL', 'a_new_andreask_secretsanta']], // Give ROLE_ADMIN_FULL a_new_andreask_secretsanta permission
-			['permission.permission_set', ['ROLE_MOD_FULL', 'm_new_andreask_secretsanta']], // Give ROLE_MOD_FULL m_new_andreask_secretsanta permission
-			['permission.permission_set', ['ROLE_USER_FULL', 'u_new_andreask_secretsanta']], // Give ROLE_USER_FULL u_new_andreask_secretsanta permission
-			['permission.permission_set', ['ROLE_USER_STANDARD', 'u_new_andreask_secretsanta']], // Give ROLE_USER_STANDARD u_new_andreask_secretsanta permission
-			['permission.permission_set', ['REGISTERED', 'u_new_andreask_secretsanta', 'group']], // Give REGISTERED group u_new_andreask_secretsanta permission
-			['permission.permission_set', ['REGISTERED_COPPA', 'u_new_andreask_secretsanta', 'group', false]], // Set u_new_andreask_secretsanta to never for REGISTERED_COPPA
+			['permission.permission_set', ['ROLE_ADMIN_FULL', 'a_new_andreask_secretx']], // Give ROLE_ADMIN_FULL a_new_andreask_secretx permission
+			['permission.permission_set', ['ROLE_MOD_FULL', 'm_new_andreask_secretx']], // Give ROLE_MOD_FULL m_new_andreask_secretx permission
+			['permission.permission_set', ['ROLE_USER_FULL', 'u_new_andreask_secretx']], // Give ROLE_USER_FULL u_new_andreask_secretx permission
+			['permission.permission_set', ['ROLE_USER_STANDARD', 'u_new_andreask_secretx']], // Give ROLE_USER_STANDARD u_new_andreask_secretx permission
+			['permission.permission_set', ['REGISTERED', 'u_new_andreask_secretx', 'group']], // Give REGISTERED group u_new_andreask_secretx permission
+			['permission.permission_set', ['REGISTERED_COPPA', 'u_new_andreask_secretx', 'group', false]], // Set u_new_andreask_secretx to never for REGISTERED_COPPA
 
 			// Add new permission roles
-			['permission.role_add', ['secretsanta admin role', 'a_', 'a new role for admins']], // New role "secretsanta admin role"
-			['permission.role_add', ['secretsanta moderator role', 'm_', 'a new role for moderators']], // New role "secretsanta moderator role"
-			['permission.role_add', ['secretsanta user role', 'u_', 'a new role for users']], // New role "secretsanta user role"
+			['permission.role_add', ['secretx admin role', 'a_', 'a new role for admins']], // New role "secretx admin role"
+			['permission.role_add', ['secretx moderator role', 'm_', 'a new role for moderators']], // New role "secretx moderator role"
+			['permission.role_add', ['secretx user role', 'u_', 'a new role for users']], // New role "secretx user role"
 
 			// Call a custom callable function to perform more complex operations.
 			// ['custom', [[$this, 'sample_callable_install']]],

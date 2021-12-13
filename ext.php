@@ -1,17 +1,17 @@
 <?php
 /**
  *
- * Secret Santa Generator. An extension for the phpBB Forum Software package.
+ * Secret X Generator. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2021, Andreas Kourtidis
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace andreask\secretsanta;
+namespace andreask\secretx;
 
 /**
- * Secret Santa Generator Extension base
+ * Secret X Generator Extension base
  *
  * It is recommended to remove this file from
  * an extension if it is not going to be used.
@@ -32,7 +32,7 @@ class ext extends \phpbb\extension\base
 		if ($old_state === false)
 		{
 			$this->container->get('notification_manager')
-				->enable_notifications('andreask.secretsanta.notification.type.paired');
+				->enable_notifications('andreask.secretx.notification.type.paired');
 
 			return 'notification';
 		}
@@ -54,7 +54,7 @@ class ext extends \phpbb\extension\base
 		if ($old_state === false)
 		{
 			$this->container->get('notification_manager')
-				->disable_notifications('andreask.secretsanta.notification.type.paired');
+				->disable_notifications('andreask.secretx.notification.type.paired');
 
 			return 'notification';
 		}
@@ -76,7 +76,7 @@ class ext extends \phpbb\extension\base
 		if ($old_state === false)
 		{
 			$this->container->get('notification_manager')
-				->purge_notifications('andreask.secretsanta.notification.type.sample');
+				->purge_notifications('andreask.secretx.notification.type.sample');
 
 			return 'notification';
 		}

@@ -1,20 +1,20 @@
 <?php
 /**
  *
- * Secret Santa Generator. An extension for the phpBB Forum Software package.
+ * Secret X Generator. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2021, Andreas Kourtidis
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace andreask\secretsanta\migrations;
+namespace andreask\secretx\migrations;
 
 class install_acp_module extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
-		return isset($this->config['andreask_secretsanta_goodbye']);
+		return isset($this->config['andreask_secretx_goodbye']);
 	}
 
 	public static function depends_on()
@@ -25,18 +25,18 @@ class install_acp_module extends \phpbb\db\migration\migration
 	public function update_data()
 	{
 		return [
-			['config.add', ['andreask_secretsanta_goodbye', 0]],
+			['config.add', ['andreask_secretx_goodbye', 0]],
 
 			['module.add', [
 				'acp',
 				'ACP_CAT_DOT_MODS',
-				'ACP_SECRETSANTA_TITLE'
+				'ACP_SECRETX_TITLE'
 			]],
 			['module.add', [
 				'acp',
-				'ACP_SECRETSANTA_TITLE',
+				'ACP_SECRETX_TITLE',
 				[
-					'module_basename'	=> '\andreask\secretsanta\acp\main_module',
+					'module_basename'	=> '\andreask\secretx\acp\main_module',
 					'modes'				=> ['settings'],
 				],
 			]],

@@ -1,17 +1,17 @@
 <?php
 /**
  *
- * Secret Santa Generator. An extension for the phpBB Forum Software package.
+ * Secret X Generator. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2021, Andreas Kourtidis
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
-namespace andreask\secretsanta\acp;
+namespace andreask\secretx\acp;
 
 /**
- * Secret Santa Generator ACP module.
+ * Secret X Generator ACP module.
  */
 class main_module
 {
@@ -30,17 +30,17 @@ class main_module
 	{
 		global $phpbb_container;
 
-		/** @var \andreask\secretsanta\controller\acp_controller $acp_controller */
-		$acp_controller = $phpbb_container->get('andreask.secretsanta.controller.acp');
+		/** @var \andreask\secretx\controller\acp_controller $acp_controller */
+		$acp_controller = $phpbb_container->get('andreask.secretx.controller.acp');
 
 		/** @var \phpbb\language\language $language */
 		$language = $phpbb_container->get('language');
 
 		// Load a template from adm/style for our ACP page
-		$this->tpl_name = 'acp_secretsanta_body';
+		$this->tpl_name = 'acp_secretx_body';
 
 		// Set the page title for our ACP page
-		$this->page_title = $language->lang('ACP_SECRETSANTA_TITLE');
+		$this->page_title = $language->lang('ACP_SECRETX_TITLE');
 
 		// Make the $u_action url available in our ACP controller
 		$acp_controller->set_page_url($this->u_action);

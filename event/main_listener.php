@@ -8,7 +8,7 @@
  *
  */
 
-namespace andreask\secretsanta\event;
+namespace andreask\secretx\event;
 
 /**
  * @ignore
@@ -72,7 +72,7 @@ class main_listener implements EventSubscriberInterface
 	{
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = [
-			'ext_name' => 'andreask/secretsanta',
+			'ext_name' => 'andreask/secretx',
 			'lang_set' => 'common',
 		];
 		$event['lang_set_ext'] = $lang_set_ext;
@@ -84,8 +84,8 @@ class main_listener implements EventSubscriberInterface
 	public function add_page_header_link()
 	{
 			$this->template->assign_vars([
-				'S_SECRETSANTA_IS_ACTIVE' => $this->config['andreask_secretsanta_is_active'],
-				'U_SECRETSANTA_PAGE'	=> $this->helper->route('andreask_secretsanta_controller'),
+				'S_SECRETX_IS_ACTIVE' => $this->config['andreask_secretx_is_active'],
+				'U_SECRETX_PAGE'	=> $this->helper->route('andreask_secretx_controller'),
 			]);
 	}
 
@@ -96,10 +96,10 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function viewonline_page($event)
 	{
-		if ($event['on_page'][1] === 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/secretsanta') === 0)
+		if ($event['on_page'][1] === 'app' && strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/secretx') === 0)
 		{
-			$event['location'] = $this->language->lang('VIEWING_ANDREASK_SECRETSANTA');
-			$event['location_url'] = $this->helper->route('andreask_secretsanta_controller', ['name' => 'world']);
+			$event['location'] = $this->language->lang('VIEWING_ANDREASK_SECRETX');
+			$event['location_url'] = $this->helper->route('andreask_secretx_controller', ['name' => 'world']);
 		}
 	}
 
@@ -111,10 +111,10 @@ class main_listener implements EventSubscriberInterface
 	 */
 	public function display_forums_modify_template_vars($event)
 	{
-		if ($this->config['andreask_secretsanta_is_active'])
+		if ($this->config['andreask_secretx_is_active'])
 		{
 			$forum_row = $event['forum_row'];
-			$forum_row['FORUM_NAME'] .= $this->language->lang('SECRETSANTA_EVENT');
+			$forum_row['FORUM_NAME'] .= $this->language->lang('SECRETX_EVENT');
 			$event['forum_row'] = $forum_row;
 		}
 	}
@@ -128,9 +128,9 @@ class main_listener implements EventSubscriberInterface
 	 *
 	 * Developers note: To control access to ACP, MCP and UCP modules, you
 	 * must assign your permissions in your module_info.php file. For example,
-	 * to allow only users with the a_new_andreask_secretsanta permission
+	 * to allow only users with the a_new_andreask_secretx permission
 	 * access to your ACP module, you would set this in your acp/main_info.php:
-	 *    'auth' => 'ext_andreask/secretsanta && acl_a_new_andreask_secretsanta'
+	 *    'auth' => 'ext_andreask/secretx && acl_a_new_andreask_secretx'
 	 *
 	 * @param \phpbb\event\data	$event	Event object
 	 */
@@ -138,9 +138,9 @@ class main_listener implements EventSubscriberInterface
 	{
 		$permissions = $event['permissions'];
 
-		$permissions['a_new_andreask_secretsanta'] = ['lang' => 'ACL_A_NEW_ANDREASK_SECRETSANTA', 'cat' => 'misc'];
-		$permissions['m_new_andreask_secretsanta'] = ['lang' => 'ACL_M_NEW_ANDREASK_SECRETSANTA', 'cat' => 'post_actions'];
-		$permissions['u_new_andreask_secretsanta'] = ['lang' => 'ACL_U_NEW_ANDREASK_SECRETSANTA', 'cat' => 'post'];
+		$permissions['a_new_andreask_secretx'] = ['lang' => 'ACL_A_NEW_ANDREASK_SECRETX', 'cat' => 'misc'];
+		$permissions['m_new_andreask_secretx'] = ['lang' => 'ACL_M_NEW_ANDREASK_SECRETX', 'cat' => 'post_actions'];
+		$permissions['u_new_andreask_secretx'] = ['lang' => 'ACL_U_NEW_ANDREASK_SECRETX', 'cat' => 'post'];
 
 		$event['permissions'] = $permissions;
 	}

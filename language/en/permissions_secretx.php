@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Secret Santa Generator. An extension for the phpBB Forum Software package.
+ * Secret X Generator. An extension for the phpBB Forum Software package.
  *
  * @copyright (c) 2021, Andreas Kourtidis
  * @license GNU General Public License, version 2 (GPL-2.0)
@@ -46,7 +46,7 @@ if (empty($lang) || !is_array($lang))
 */
 
 $lang = array_merge($lang, [
-	'ACL_A_NEW_ANDREASK_SECRETSANTA'	=> 'Can use this Secret Santa Generator admin feature',
-	'ACL_M_NEW_ANDREASK_SECRETSANTA'	=> 'Can use this Secret Santa Generator moderator feature',
-	'ACL_U_NEW_ANDREASK_SECRETSANTA'	=> 'Can use this Secret Santa Generator user feature',
+	'ACL_A_NEW_ANDREASK_SECRETX'	=> 'Can use Secret X Generator admin feature',
+	'ACL_M_NEW_ANDREASK_SECRETX'	=> 'Can use Secret X Generator moderator feature',
+	'ACL_U_NEW_ANDREASK_SECRETX'	=> 'Can use Secret X Generator user feature',
 ]);
