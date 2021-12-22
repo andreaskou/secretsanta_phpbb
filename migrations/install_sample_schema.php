@@ -46,7 +46,7 @@ class install_sample_schema extends \phpbb\db\migration\migration
 		return [
 			'add_columns'	=> [
 				$this->table_prefix . 'users'			=> [
-					'secretx_sends_to'			=> ['TINT:4', null],
+					'secretx_sends_to'			=> ['INT:11', 0],
 					'secretx_address'			=> ['TEXT_UNI', null],
 					'secretx_gift_sent'			=> ['BOOL'],
 					'secretx_participating'		=> ['BOOL'],
