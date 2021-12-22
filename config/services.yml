@@ -13,6 +13,7 @@ services:
             - '@template'
             - '@language'
             - '@notification_manager'
+            - '@log'
 
     andreask.secretx.controller.acp:
         class: andreask\secretx\controller\acp_controller

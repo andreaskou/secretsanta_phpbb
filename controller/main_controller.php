@@ -38,6 +38,9 @@ class main_controller
 
 	/** @var \phpbb\notiification\manager */
 	protected $notification_manager;
+	/** @vat \phpbb\log\log  */
+	protected $log;				/** Log class for logging informatin */
+
 
 	protected $u_action;
 
@@ -54,9 +57,10 @@ class main_controller
 	 * @param \phpbb\template\template			$template	Template object
 	 * @param \phpbb\language\language			$language	Language object
 	 * @param \phpbb\notification\manager 		$notification_manager		Notification Manager
+	 * @param \phpbb\log\log 					$log 	Phpbb loging system
 	 */
 
-	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\language\language $language, \phpbb\notification\manager $notification_manager)
+	public function __construct(\phpbb\config\config $config, \phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\request\request $request, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\language\language $language, \phpbb\notification\manager $notification_manager, \phpbb\log\log $log)
 	{
 		$this->config	= $config;
 		$this->db		= $db;
@@ -66,6 +70,8 @@ class main_controller
 		$this->template	= $template;
 		$this->language	= $language;
 		$this->notification_manager = $notification_manager;
+		$this->log		= $log;
+
 		$this->user_id = $this->user->data['user_id'];
 		$this->u_action	= append_sid(generate_board_url() . '/' . $this->user->page['page']);
 	}
@@ -142,6 +148,7 @@ class main_controller
 
 			$text = $this->request->variable('secretx_address_info', '');
 			$save = generate_text_for_storage($text, $uid, $bitfield, $flags, false, false, false); //inout formated
+			
 			$this->save_secretx_address($text);
 		}
 		
@@ -227,8 +234,14 @@ class main_controller
 
 		}
 
-		$secretx_address	= generate_text_for_display($text, $this->user_id, $bitfield, $flags); //String
-		$secretx_sends_to	= generate_text_for_display($sends_to['secretx_address'], $this->user_id, $bitfield, $flags);
+		if ($text != '')
+		{
+			$secretx_address	= generate_text_for_display($text, $this->user_id, $bitfield, $flags); //String
+		}
+		if ($sends_to['secretx_address'] != '')
+		{
+			$secretx_sends_to	= generate_text_for_display($sends_to['secretx_address'], $this->user_id, $bitfield, $flags);
+		}
 
 		$this->template->assign_vars(
 			[
@@ -356,18 +369,18 @@ class main_controller
 				$sql = 'UPDATE '. USERS_TABLE . ' SET '. $this->db->sql_build_array('UPDATE', $sql_array) .' 
 						WHERE '. $this->db->sql_in_set('user_id', $users);
 						$result = $this->db->sql_query($sql);
+						$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_SECRETX_PARTICIPANTS_RESET', time());
 				break;
 						
 				case 'secretx_reset_pair':
 					$sql_array = ['secretx_sends_to' => null,];
 					$sql = 'UPDATE '. USERS_TABLE . ' SET '. $this->db->sql_build_array('UPDATE', $sql_array) .' 
-					WHERE '. $this->db->sql_in_set('user_id', $users);
-				
+					WHERE '. $this->db->sql_in_set('user_id', $users);				
 					$result = $this->db->sql_query($sql);
+					$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_SECRETX_PAIRS_RESET', time());
 				break;
 				
 				default:
-					
 				break;
 		}
 	}
@@ -433,9 +446,12 @@ class main_controller
 		{
 			$update_array = ['secretx_sends_to' => (int) $pair['secretx_sends_to']];
 			$sql = 'UPDATE '. USERS_TABLE .' SET ' . $this->db->sql_build_array('UPDATE', $update_array) .' WHERE user_id = '. (int) $pair['user_id'];
+			// var_dump($sql);
+			// die();
 			$result = $this->db->sql_query($sql);
 			$this->notify('pair', $pair['user_id']);
 		}
+		$this->log->add('user', $this->user->data['user_id'], $this->user->ip, 'LOG_SECRETX_PAIRED_USERS', time());
 	}
 
 	private function notify($type, $user)
